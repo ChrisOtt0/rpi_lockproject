@@ -1,18 +1,22 @@
+import unittest
 import configparser
 import os
 
 class ConfigHandler:
-    def __init__(self):
-        self._path = "/home/pi/.config/lockproject/"
-        self._config_exists()
-        self._config = self._load_config()
+    def __init__(self, path: str, is_test: bool):
+        self._path = path
+
+        if not is_test:
+            self._config_exists()
+            self._config = self._load_config()
 
     def _config_exists(self):
         if not os.path.exists(self._path):
             os.mkdir(self._path)
 
         if not os.path.exists(self._path + "config.ini"):
-            self._gen_default_conf()
+            config = self._gen_default_conf()
+            self._write_config(config)
 
     def _gen_default_conf(self):
         config = configparser.ConfigParser()
@@ -20,13 +24,14 @@ class ConfigHandler:
             "ServerIp": "51.75.69.121",
             "ServerPort": "3000"
         }
-
         config["DATA"] = {
             "Id": "123je1mn4567ma82",
             "Activated": "True",
         }
+        return config
 
-        with open(self._path + "config.ini", 'w') as configfile:
+    def _write_config(self, config: configparser.ConfigParser):
+        with open(self._path + "config.ini", "w") as configfile:
             config.write(configfile)
 
     def _load_config(self):
@@ -63,5 +68,79 @@ class ConfigHandler:
         else:
             self._config["DATA"]["Activated"] = "False"
 
-        with open(self._path + "config.ini", 'w') as configfile:
-            self._config.write(configfile)
+        self._write_config(self._config)
+
+
+#### UNIT TESTS ####
+class ConfTestMethods(unittest.TestCase):
+    def test_gen_default_conf(self):
+        # Arrange
+        expected = configparser.ConfigParser()
+        expected["SERVER"] = {
+            "ServerIp": "51.75.69.121",
+            "ServerPort": "3000"
+        }
+        expected["DATA"] = {
+            "Id": "123je1mn4567ma82",
+            "Activated": "True",
+        }
+
+        handler = ConfigHandler("", True)
+
+        # Act
+        result = handler._gen_default_conf()
+
+        # Assert
+        self.assertEqual(expected, result)
+
+    
+    def test_get_server_ip(self):
+        # Arrange
+        handler = ConfigHandler("", True)
+        config = handler._gen_default_conf()
+        expected = "51.75.69.121"
+
+        # Act
+        result = config["SERVER"]["ServerIp"]
+
+        # Assert
+        self.assertEqual(expected, result)
+        
+
+    def test_get_server_port(self):
+        # Arrange
+        handler = ConfigHandler("", True)
+        config = handler._gen_default_conf()
+        expected = "3000"
+
+        # Act
+        result = config["SERVER"]["ServerPort"]
+
+        # Assert
+        self.assertEqual(expected, result)
+
+
+    def test_get_lock_id(self):
+        # Arrange
+        handler = ConfigHandler("", True)
+        config = handler._gen_default_conf()
+        expected = "123je1mn4567ma82"
+
+        # Act
+        result = config["DATA"]["Id"]
+
+        # Assert
+        self.assertEqual(expected, result)
+
+
+    def test_is_lock_activated(self):
+        # Arrange
+        handler = ConfigHandler("", True)
+        config = handler._gen_default_conf()
+        expected = "True"
+
+        # Act
+        result = config["DATA"]["Activated"]
+
+        # Assert
+        self.assertEqual(expected, result)
