@@ -1,7 +1,9 @@
-from modules.config import ConfigHandler
+from modules.config_handler import ConfigHandler
+from modules.lock_handler import LockHandler
+from modules.lock_types import LockTypes
 
-config_path = "/home/pi/.config/lockproject/"
-config = ConfigHandler(path=config_path, is_test=False)
+config = ConfigHandler(is_test=False)
+lock = LockHandler(LockTypes.SERVO)
 
 def main():
-    print("Config works")
+    lock.unlock(config.get_unlocked_time())
