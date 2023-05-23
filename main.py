@@ -5,7 +5,7 @@ try:
     lib.main()
 
 except KeyboardInterrupt:
-    print("Program interrupted.")
+    print()
 
 finally:
     GPIO.cleanup()
