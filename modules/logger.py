@@ -21,22 +21,20 @@ class Logger:
                 log.write("")
 
     def _write_to_log(self, path, message):
-        with open(path, "w") as log:
+        with open(path, "a") as log:
             log.write(message + "\n")
 
-    def _gen_error_log(self, e):
+    def _gen_error_log(self, e: str):
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
         message = "Error logged at: " + dt_string + "\n"
-        message += str(type(e)) + "\n"
-        message += str(e.args) + "\n"
-        message += str(e) + "\n"
+        message += e + "\n"
         return message
 
     def get_err_log_path(self) -> str:
         return self.path + "err_logs.txt"
 
-    def log_error(self, e):
+    def log_error(self, e: str):
         message = self._gen_error_log(e)
         self._write_to_log(self.path + "err_logs.txt", message)
 
