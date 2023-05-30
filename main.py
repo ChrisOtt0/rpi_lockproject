@@ -13,12 +13,12 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(inside_switch, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 test_url = "://192.168.1.244:8000"
-production_url = "://51.75.69.121:3000"
+dev_url = "://51.75.69.121:3000"
 
 config = ConfigHandler(is_test=False)
 logger = Logger(is_test=False)
 lock = LockHandler(LockTypes.SERVO)
-http = HttpHandler(test_url)
+http = HttpHandler(dev_url)
 
 websocket_header = [
     'lockid: ' + config.get_lock_id()
@@ -29,7 +29,7 @@ wsdelegater = WsDelegater(
     logger=logger,
     lock=lock,
     http=http,
-    ws_url=test_url,
+    ws_url=dev_url,
     ws_headers=websocket_header
 )
 
