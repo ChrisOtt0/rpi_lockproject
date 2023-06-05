@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+gmport RPi.GPIO as GPIO
 import traceback
 from modules.config_handler import ConfigHandler
 from modules.lock_handler import LockHandler

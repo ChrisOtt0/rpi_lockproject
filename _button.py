@@ -1,18 +1,32 @@
 import RPi.GPIO as GPIO
-from requests.models import HTTPError
-from modules.http_handler import HttpHandler
+import time
 
-http = HttpHandler("http://127.0.0.1:8080/")
+pin = 18
+led = 17
+lock = 24
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(led, GPIO.OUT)
+GPIO.setup(lock, GPIO.OUT)
+
+GPIO.output(led, False);
+GPIO.output(lock, False);
 
 def switch_handler(channel):
-    if channel == 18:
-        if not http.unlock():
-            raise HTTPError
+    print(str(channel) + " pressed")
+    GPIO.output(led, True)
+    GPIO.output(lock, True)
+    time.sleep(2)
+    GPIO.output(lock, False)
+    GPIO.output(led, False)
 
-GPIO.add_event_detect(18, GPIO.FALLING, callback=switch_handler)
+GPIO.add_event_detect(pin, GPIO.FALLING, callback=switch_handler)
 
-while True:
-    i = 0
+try:
+    while True:
+        i = 0
+except KeyboardInterrupt:
+    GPIO.output(led, False);
+    GPIO.output(lock, False);
+    GPIO.cleanup()
