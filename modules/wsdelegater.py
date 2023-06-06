@@ -39,7 +39,7 @@ class WsDelegater():
         
 
     def switch_handler(self, channel):
-        if channel == 18:
+        if channel == 21:
             self._unlock_door("inside switch.")
 
     def run(self):

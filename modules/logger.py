@@ -36,7 +36,9 @@ class Logger:
 
     def log_error(self, e: str):
         message = self._gen_error_log(e)
+        print(message)
         self._write_to_log(self.path + "err_logs.txt", message)
 
     def log_event(self, e):
+        print(e)
         self._write_to_log(self.path + "event_logs.txt", e)

@@ -1,4 +1,4 @@
-gmport RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import traceback
 from modules.config_handler import ConfigHandler
 from modules.lock_handler import LockHandler
@@ -7,17 +7,17 @@ from modules.logger import Logger
 from modules.http_handler import HttpHandler
 from modules.wsdelegater import WsDelegater
 
-inside_switch = 18
+inside_switch = 21
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(inside_switch, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-test_url = "://192.168.1.244:8000"
+test_url = "://192.168.1.22:8000"
 dev_url = "://51.75.69.121:3000"
 
 config = ConfigHandler(is_test=False)
 logger = Logger(is_test=False)
-lock = LockHandler(LockTypes.SERVO)
+lock = LockHandler(LockTypes.ELECTRIC)
 http = HttpHandler(dev_url)
 
 websocket_header = [
@@ -33,7 +33,7 @@ wsdelegater = WsDelegater(
     ws_headers=websocket_header
 )
 
-GPIO.add_event_detect(inside_switch, GPIO.FALLING, callback=wsdelegater.switch_handler)
+GPIO.add_event_detect(inside_switch, GPIO.FALLING, callback=wsdelegater.switch_handler, bouncetime=1200)
 
 try:
     wsdelegater.run()
