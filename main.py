@@ -33,7 +33,7 @@ wsdelegater = WsDelegater(
     ws_headers=websocket_header
 )
 
-GPIO.add_event_detect(inside_switch, GPIO.FALLING, callback=wsdelegater.switch_handler, bouncetime=1200)
+GPIO.add_event_detect(inside_switch, GPIO.FALLING, callback=wsdelegater.switch_handler, bouncetime=4200)
 
 try:
     wsdelegater.run()

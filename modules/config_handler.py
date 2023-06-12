@@ -34,7 +34,7 @@ class ConfigHandler:
             "Paired": "False"
         }
         config["SETTINGS"] = {
-            "UnlockedTime": "6"
+            "UnlockedTime": "4"
         }
         return config
 
